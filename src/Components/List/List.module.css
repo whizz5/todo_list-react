@@ -1,0 +1,108 @@
+body {
+  background-image: url("https://cdn.pixabay.com/photo/2018/10/04/13/55/note-3723689_960_720.jpg"); /* https://pixabay.com/illustrations/note-post-it-memory-sticky-note-3723689/                */
+  background-size: cover;
+  font-family: "SimpsonsFont", "Comic Sans MS", "Comic Sans";
+  font-size: 100%;
+}
+
+.listBody {
+  background: lightgray;
+  margin: 10px;
+  width: 350px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.listBody.purple {
+  border: solid 3px rgb(121, 4, 145); 
+}
+.listBody.orange {
+  border: solid 3px rgb(238, 155, 0); 
+}
+.listBody.olive {
+  border: solid 3px rgb(97, 114, 59); 
+}
+
+
+
+
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+div.noteHeader {
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+div.noteHeader.purple {
+  background: rgb(121, 4, 145);
+}
+div.noteHeader.orange {
+  background: rgb(238, 155, 0);
+}
+div.noteHeader.olive {
+  background: rgb(97, 114, 59);
+}
+
+
+
+
+h1 + button.ui.button  {
+margin: 0;
+}
+
+h1 {
+  color: white;
+  font-size: 20px;
+  font-weight: normal;
+  background: transparent;
+  text-align: center;
+  align-self: center;
+  margin: 0;
+
+}
+
+input[type="text"] {
+  background: lightgray;
+  width: 100%;
+  font-size: 18px;
+  padding: 10px 15px 10px 20px;
+  box-sizing: border-box;
+}
+input[type="text"].purple {
+   color: rgb(121, 4, 145);
+  border: 1px solid rgba(121, 4, 145);
+}
+input[type="text"].orange {
+   color: rgb(238, 155, 0);
+  border: 1px solid rgba(238, 155, 0);
+}
+input[type="text"].olive {
+   color: rgb(97, 114, 59);
+  border: 1px solid rgb(97, 114, 59);
+}
+
+input[type="text"]:focus {
+  background: white;
+  outline: none;
+}
+
+input[type="checkbox"] {
+  float: right;
+  list-style: none;
+  margin: 5px;
+  background-color: white;
+  border: solid black 3px;
+}
+
+
+
+
+ul > li:nth-of-type(2n) {
+  background: lightgray;
+}

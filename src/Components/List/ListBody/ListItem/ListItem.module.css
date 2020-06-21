@@ -1,0 +1,87 @@
+
+/* //////////////////////////////////////////////////// */
+  
+   /* Create a custom checkbox */
+   .checkmark {
+    /* display: inline-block;
+    top: 0;
+    left: 0; */
+    height: 30px;
+    width: 30px;
+    background: transparent;
+    border: solid white 3px;
+    }
+
+    input[type="checkbox"] {
+      float: right;
+      list-style: none;
+      margin: 5px;
+      background: transparent;
+      
+      border: solid white 3px;
+  }
+  
+
+
+  li {
+  
+    height: 40px;
+    line-height: 40px;
+          padding: 0 10px;
+  }
+  li.purple {
+    background: rgb(215, 145, 230);
+    border: 1px solid rgb(121, 4, 145);
+  }
+  li.orange {
+    background: rgb(243, 228, 201);
+    border: 1px solid rgb(238, 155, 0);
+  }
+  li.olive {
+    background: rgb(193, 230, 145);
+    border: 1px solid rgb(97, 114, 59);
+  }
+
+  input[type="text"].taskDisplay{
+    display: inline-block;
+    padding: 0;
+    border: none;
+    width: 75%;
+    background: none;
+    font-style: italic;
+    color: white;
+  }
+
+
+  input[type="text"].taskDisplay:focus{
+  background-color: inherit;
+  
+  }
+
+  input[type="text"].completed{
+    text-decoration: line-through;
+    display: inline-block;
+    padding: 0;
+    border: none;
+    width: 75%;
+    background: none;    
+}
+
+
+  input[type="text"].completed.purple{
+    color: rgb(121, 4, 145);
+}
+  input[type="text"].completed.orange{
+    color: rgb(238, 155, 0);
+}
+  input[type="text"].completed.olive{
+    color: rgb(97, 114, 59);
+}
+
+input[type="text"].taskDisplay:disabled {
+
+    font-style: normal;
+    color: white;
+   
+
+}

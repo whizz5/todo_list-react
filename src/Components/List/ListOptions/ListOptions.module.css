@@ -1,0 +1,26 @@
+
+
+
+.listOptions{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    /* padding:  2.5px */
+}
+
+.colorPalette{
+    display: flex;
+}
+
+.purple {
+    background: rgb(215, 145, 230);
+   border: 1px solid rgba(121, 4, 145);
+ }
+ .orange {
+    background: rgb(243, 228, 201);
+   border: 1px solid rgba(238, 155, 0);
+ }
+ .olive {
+    background: rgb(193, 230, 145);
+   border: 1px solid rgb(97, 114, 59);
+ }

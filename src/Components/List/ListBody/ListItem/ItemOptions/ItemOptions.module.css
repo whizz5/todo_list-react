@@ -1,0 +1,33 @@
+li.optionsBody {
+  padding: 0 10px;
+  
+}
+
+li.optionsBody span.optionsContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-style: italic;
+}
+
+ol {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+}
+
+
+li.purple {
+ background: rgba(165, 102, 180, 0.603);
+ border: 1px solid rgba(121, 4, 145);
+}
+li.orange {
+ background: rgb(238, 205, 144);
+ border: 1px solid rgba(238, 155, 0);
+}
+li.olive {
+  background: rgb(153, 167, 123);
+  border: 1px solid rgb(97, 114, 59);
+}

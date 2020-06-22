@@ -3,12 +3,18 @@ import ListItem from "./ListBody/ListItem/ListItem";
 import classes from "./List.module.css";
 import SemanticButton from "../../Components/Button/Button";
 import ListOptions from "../List/ListOptions/ListOptions";
-import classNames from "classnames/bind";
 
-let cx = classNames.bind(classes);
+import Draggable from 'react-draggable'
+import { createRef } from "react";
+
+
 
 class List extends Component {
 
+  constructor(props){
+    super(props)
+    this.dragRef = React.createRef()
+  }
   
   state = {
     listData: [],
@@ -272,11 +278,15 @@ class List extends Component {
       />
     ));
 
-    
+
 
     return (
+      <Draggable>
+        
+      
       <div className={`${classes.listBody} ${classes[this.state.listColor]}`}>
         <div
+       
           className={` ${classes.noteHeader} ${classes[this.state.listColor]} `}
         >
           <SemanticButton clicked={this.props.clicked} iconUsed="plus" />
@@ -306,6 +316,7 @@ class List extends Component {
         </form>
         <ul>{this.state.listData.length > 0 ? todoItems : null}</ul>
       </div>
+      </Draggable>
     );
   }
 }

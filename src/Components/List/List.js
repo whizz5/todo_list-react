@@ -4,54 +4,19 @@ import classes from "./List.module.css";
 import SemanticButton from "../../Components/Button/Button";
 import ListOptions from "../List/ListOptions/ListOptions";
 
-import Draggable from 'react-draggable'
-import { createRef } from "react";
+import Draggable from "react-draggable";
+import { connect } from "react-redux";
 
-
+import * as actionTypes from '../../store/actions';
 
 class List extends Component {
-
-  constructor(props){
-    super(props)
-    this.dragRef = React.createRef()
+  constructor(props) {
+    super(props);
+    this.dragRef = React.createRef();
   }
-  
+
   state = {
     listData: [],
-    // listData: [
-    //   {
-    //     id: 1,
-    //     task: "Order a Kindle",
-    //     complete: true,
-    //     showItemOptions: false,
-    //     editingDisabled: true,
-    //     dateCreated: Date()
-    //   },
-    //   {
-    //     id: 2,
-    //     task: "Update notes",
-    //     complete: false,
-    //     showItemOptions: false,
-    //     editingDisabled: true,
-    //     dateCreated: Date()
-    //   },
-    //   {
-    //     id: 3,
-    //     task: "Revisit pot design",
-    //     complete: true,
-    //     showItemOptions: false,
-    //     editingDisabled: true,
-    //     dateCreated: Date()
-    //   },
-    //   {
-    //     id: 4,
-    //     task: "Check order status",
-    //     complete: false,
-    //     showItemOptions: false,
-    //     editingDisabled: true,
-    //     dateCreated: Date()
-    //   },
-    // ],
     newItem: "",
     showListOptions: false,
     listColor: "purple",
@@ -103,13 +68,13 @@ class List extends Component {
     console.log("itemId: ", itemId);
     console.log("event: ", event.currentTarget);
 
-    let  currentDate = new Date();
-    currentDate = currentDate.toDateString()
-    console.log('currentDate: ', currentDate);
+    let currentDate = new Date();
+    currentDate = currentDate.toDateString();
+    console.log("currentDate: ", currentDate);
 
     switch (name) {
       case "newItemEntry":
-        if (this.state.newItem !== "") {
+        if (this.props.newItem !== "") {
           this.setState((prevState) => {
             const updatedList = [...prevState.listData]; //copies prevState.list into new []
             updatedList.push({
@@ -119,8 +84,7 @@ class List extends Component {
               complete: false,
               showItemOptions: false,
               editingDisabled: true,
-              dateCreated: currentDate
-
+              dateCreated: currentDate,
             });
 
             return {
@@ -143,7 +107,6 @@ class List extends Component {
           };
         });
     }
-
   };
 
   deleteHandler = (event) => {
@@ -151,7 +114,7 @@ class List extends Component {
     /*
      Find the index of array element containing the list item event was triggered from
         */
-    const arrayIndex = this.state.listData.findIndex((listItem) => {
+    const arrayIndex = this.props.listData.findIndex((listItem) => {
       return listItem.id === itemId;
     });
 
@@ -171,11 +134,11 @@ class List extends Component {
     const { id } = event.currentTarget; //object destructering
     const itemId = Number(id); //converts id to number
 
-    const arrayIndex = this.state.listData.findIndex((listItem) => {
+    const arrayIndex = this.props.listData.findIndex((listItem) => {
       return listItem.id === itemId;
     });
 
-    let updatedListData = [...this.state.listData];
+    let updatedListData = [...this.props.listData];
     updatedListData[arrayIndex].editingDisabled = false;
     this.setState({ listData: updatedListData });
 
@@ -186,7 +149,7 @@ class List extends Component {
     //   }
     // }))
 
-    console.log("listData: ", this.state.listData);
+    console.log("listData: ", this.props.listData);
   };
 
   buttonClickHandler = (event) => {
@@ -239,7 +202,7 @@ class List extends Component {
       };
     });
 
-    // console.log(this.state.listData);
+    // console.log(this.props.listData);
   };
 
   mouseExit = (event) => {
@@ -264,7 +227,7 @@ class List extends Component {
   };
 
   render() {
-    const todoItems = this.state.listData.map((item) => (
+    const todoItems = this.props.listData.map((item) => (
       <ListItem
         key={item.id}
         mouseHover={this.mouseHover}
@@ -273,21 +236,16 @@ class List extends Component {
         item={item}
         clicked={this.buttonClickHandler}
         submit={this.submitHandler}
-        color={this.state.listColor}
+        color={this.props.listColor}
         dateCreated={item.dateCreated}
       />
     ));
 
-
-
     return (
-      <Draggable>
-        
-      
-      <div className={`${classes.listBody} ${classes[this.state.listColor]}`}>
+      //<Draggable>
+      <div className={`${classes.listBody} ${classes[this.props.listColor]}`}>
         <div
-       
-          className={` ${classes.noteHeader} ${classes[this.state.listColor]} `}
+          className={` ${classes.noteHeader} ${classes[this.props.listColor]} `}
         >
           <SemanticButton clicked={this.props.clicked} iconUsed="plus" />
           <h1>Task List </h1>
@@ -296,9 +254,9 @@ class List extends Component {
             iconUsed="angle down"
           />
         </div>
-        {this.state.showListOptions ? (
+        {this.props.showListOptions ? (
           <ListOptions
-            color={this.state.listColor}
+            color={this.props.listColor}
             clicked={this.buttonClickHandler}
             deleteClicked={this.props.clicked}
             listId={this.props.listId}
@@ -306,19 +264,43 @@ class List extends Component {
         ) : null}
         <form name="newItemEntry" onSubmit={this.submitHandler}>
           <input
-            className={`${classes[this.state.listColor]}`}
+            className={`${classes[this.props.listColor]}`}
             name="newItem"
-            value={this.state.newItem}
-            onChange={this.onChangeHandler}
+            value={this.props.newItem}
+            onChange={(event)=>this.props.onInputUpdate(event)}
             placeholder="Add a task"
             type="text"
           />
         </form>
-        <ul>{this.state.listData.length > 0 ? todoItems : null}</ul>
+        <ul>{this.props.listData.length > 0 ? todoItems : null}</ul>
       </div>
-      </Draggable>
+      //</Draggable>
     );
   }
 }
 
-export default List;
+///////////////////////////////////
+//mapStateToProps defines which part of the state is being used in this container
+const mapStateToProps = (state) => {
+  return {
+    /* 
+Properties from within state (as seen in reducer.js) are assigned as props which can then be used in the container
+*/
+
+    listData: state.listData,
+    newItem: state.newItem,
+    showListOptions: state.showListOptions,
+    listColor: state.listColor,
+  };
+};
+
+//mapDispatchToProps defines which actions are being used in this container
+const mapDispatchToProps = (dispatch) => {
+  return {
+onInputUpdate: (event)=>dispatch({type: actionTypes.UPDATE_LIST, value: event})
+
+
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);

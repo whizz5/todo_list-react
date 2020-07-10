@@ -232,7 +232,7 @@ class List extends Component {
         key={item.id}
         mouseHover={this.mouseHover}
         mouseExit={this.mouseExit}
-        changed={this.onChangeHandler}
+        changed={this.props.reduxInputUpdate}
         item={item}
         clicked={this.buttonClickHandler}
         submit={this.submitHandler}
@@ -262,12 +262,12 @@ class List extends Component {
             listId={this.props.listId}
           />
         ) : null}
-        <form name="newItemEntry" onSubmit={this.submitHandler}>
+        <form name="newItemEntry" onSubmit={this.props.reduxSubmitHandler}>
           <input
             className={`${classes[this.props.listColor]}`}
             name="newItem"
             value={this.props.newItem}
-            onChange={(event)=>this.props.onInputUpdate(event)}
+            onChange={(event)=>this.props.reduxInputUpdate(event)}
             placeholder="Add a task"
             type="text"
           />
@@ -286,7 +286,6 @@ const mapStateToProps = (state) => {
     /* 
 Properties from within state (as seen in reducer.js) are assigned as props which can then be used in the container
 */
-
     listData: state.listData,
     newItem: state.newItem,
     showListOptions: state.showListOptions,
@@ -297,8 +296,7 @@ Properties from within state (as seen in reducer.js) are assigned as props which
 //mapDispatchToProps defines which actions are being used in this container
 const mapDispatchToProps = (dispatch) => {
   return {
-onInputUpdate: (event)=>dispatch({type: actionTypes.UPDATE_LIST, value: event})
-
+reduxInputUpdate: (event)=>dispatch({type: actionTypes.UPDATE_LIST,  value: event} ),
 
   };
 };

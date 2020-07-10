@@ -7,15 +7,8 @@ const initialState = {
   listColor: "purple",
 };
 
-/* export const  CREATE_LIST_ITEM= "CREATE_LIST_ITEM" ;
-export const DELETE_LIST_ITEM = "DELETE_LIST_ITEM" ;
-export const EDIT_LIST_ITEM = "EDIT_LIST_ITEM" ;
-export const  CREATE_LIST= "CREATE_LIST" ;
-export const DELETE_LIST = "DELETE_LIST" ;
-export const CHANGE_COLOR = "CHANGE_COLOR" ; */
-
 const reducer = (state = initialState, action) => {
-  switch (actionTypes) {
+  switch (action.type) {
     case "CREATE_LIST_ITEM":
       return {};
     case "DELETE_LIST_ITEM":
@@ -29,45 +22,46 @@ const reducer = (state = initialState, action) => {
     case "CHANGE_COLOR":
       return {};
     case actionTypes.UPDATE_LIST:
-        console.log("[UPDATE_LIST] ---reducer")
+      // case "UPDATE_LIST":
+      console.log("[UPDATED LIST --- reducer]");
       const { value, name, type, id } = action.value.target; //object destructering
       const itemId = Number(id); //converts id to number
-      type === "checkbox"
-        ? this.setState((prevState) => {
-            const updatedState = prevState.listData.map((task) => {
-              //new [] formed using map method
-              if (task.id === itemId) {
-                //checks id of current task against passed in id
-                return {
-                  //returns new object so as not to edit state directly
-                  ...task, // uses spread operator to bring in old tasks properties
-                  complete: !task.complete, //flips completed property
-                };
-              }
-              return task; //returns task and puts into updatedState
-            });
+      if (type === "checkbox") { //if we check an item
+        const updatedState = state.listData.map((task) => {
+          //new [] formed using map method
+          if (task.id === itemId) {
+            //checks id of current task against passed in id
             return {
-              listData: updatedState,
+              //returns new object so as not to edit state directly
+              ...task, // uses spread operator to bring in old tasks properties
+              complete: !task.complete, //flips completed property
             };
-          })
-        : name === "newItem"
-        ? this.setState({
-            newItem: value,
-          })
-        : this.setState((prevState) => {
-            const arrayIndex = prevState.listData.findIndex((listItem) => {
-              return listItem.id === itemId;
-            });
+          }
+          return task; //returns task and puts into updatedState
+        });
+        return {
+          ...state,
+          listData: updatedState,
+        };
+      } else if (name === "newItem") { //if we add a new item to the list
+        return {
+          ...state,
+          newItem: value,
+        };
+      } else { //if item within the list has been changed
+        const arrayIndex = state.listData.findIndex((listItem) => {
+          return listItem.id === itemId;
+        });
 
-            let updatedListData = [...prevState.listData];
-            updatedListData[arrayIndex].task = value;
+        let updatedListData = [...state.listData];
+        updatedListData[arrayIndex].task = value;
 
-            console.log("updated: ", updatedListData);
-            return { listData: updatedListData };
-          });
-          break;
+        console.log("updated: ", updatedListData);
+        return { ...state, listData: updatedListData };
+      }
 
     default:
+      console.log("[DEFAULT --- reducer]");
       return state;
   }
 };

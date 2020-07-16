@@ -3,11 +3,8 @@ import ListItem from "./ListBody/ListItem/ListItem";
 import classes from "./List.module.css";
 import SemanticButton from "../../Components/Button/Button";
 import ListOptions from "../List/ListOptions/ListOptions";
-
-import Draggable from "react-draggable";
 import { connect } from "react-redux";
-
-import * as actionTypes from '../../store/actions';
+import * as actionTypes from "../../store/actions";
 
 class List extends Component {
   constructor(props) {
@@ -15,224 +12,52 @@ class List extends Component {
     this.dragRef = React.createRef();
   }
 
-  state = {
-    listData: [],
-    newItem: "",
-    showListOptions: false,
-    listColor: "purple",
-  };
-
-  onChangeHandler = (event) => {
-    const { value, name, type, id } = event.target; //object destructering
-    const itemId = Number(id); //converts id to number
-
-    type === "checkbox"
-      ? this.setState((prevState) => {
-          const updatedState = prevState.listData.map((task) => {
-            //new [] formed using map method
-            if (task.id === itemId) {
-              //checks id of current task against passed in id
-              return {
-                //returns new object so as not to edit state directly
-                ...task, // uses spread operator to bring in old tasks properties
-                complete: !task.complete, //flips completed property
-              };
-            }
-            return task; //returns task and puts into updatedState
-          });
-          return {
-            listData: updatedState,
-          };
-        })
-      : name === "newItem"
-      ? this.setState({
-          newItem: value,
-        })
-      : this.setState((prevState) => {
-          const arrayIndex = prevState.listData.findIndex((listItem) => {
-            return listItem.id === itemId;
-          });
-
-          let updatedListData = [...prevState.listData];
-          updatedListData[arrayIndex].task = value;
-
-          console.log("updated: ", updatedListData);
-          return { listData: updatedListData };
-        });
-  };
-
   submitHandler = (event) => {
-    event.preventDefault();
-    const { name, id } = event.target; //object destructering
-    const itemId = Number(id); //converts id to number
-    console.log("itemId: ", itemId);
-    console.log("event: ", event.currentTarget);
+    event.preventDefault(); //prevents page refresh on submission
 
-    let currentDate = new Date();
-    currentDate = currentDate.toDateString();
-    console.log("currentDate: ", currentDate);
+    //User is either creating a new list item or updating an existing list item
+    const name = event.target.name; //object destructering
 
     switch (name) {
       case "newItemEntry":
         if (this.props.newItem !== "") {
-          this.setState((prevState) => {
-            const updatedList = [...prevState.listData]; //copies prevState.list into new []
-            updatedList.push({
-              //pushes {} into new []
-              id: Math.floor(Math.random() * 1000), //lazy way of giving unique id numbers
-              task: prevState.newItem, //assigns task from old state - from input field
-              complete: false,
-              showItemOptions: false,
-              editingDisabled: true,
-              dateCreated: currentDate,
-            });
-
-            return {
-              listData: updatedList, //assigns new [] to state prop
-              newItem: "",
-            };
-          });
+          // if text has definitely been entered
+          this.props.reduxCreateListItem();
         }
         break;
 
       default:
-        this.setState((prevState) => {
-          const arrayIndex = prevState.listData.findIndex((listItem) => {
-            return listItem.id === itemId;
-          });
-          let updatedList = [...prevState.listData];
-          updatedList[arrayIndex].editingDisabled = true;
-          return {
-            listData: updatedList,
-          };
-        });
+        this.props.reduxUpdateList(event);
     }
-  };
-
-  deleteHandler = (event) => {
-    const itemId = Number(event.currentTarget.id); //converts id to number
-    /*
-     Find the index of array element containing the list item event was triggered from
-        */
-    const arrayIndex = this.props.listData.findIndex((listItem) => {
-      return listItem.id === itemId;
-    });
-
-    this.setState((prevState) => {
-      return {
-        listData: prevState.listData.filter(
-          (listItem) => {
-            //setState using filter method which returns new array
-            return prevState.listData.indexOf(listItem) !== arrayIndex;
-          } // filters out the element with matching id
-        ),
-      };
-    });
-  };
-
-  editHandler = (event) => {
-    const { id } = event.currentTarget; //object destructering
-    const itemId = Number(id); //converts id to number
-
-    const arrayIndex = this.props.listData.findIndex((listItem) => {
-      return listItem.id === itemId;
-    });
-
-    let updatedListData = [...this.props.listData];
-    updatedListData[arrayIndex].editingDisabled = false;
-    this.setState({ listData: updatedListData });
-
-    // this.setState(prevState=>({
-    //   listData: {
-    //     ...prevState.listData,
-    //     [prevState.listData[arrayIndex].editingDisabled]: false
-    //   }
-    // }))
-
-    console.log("listData: ", this.props.listData);
   };
 
   buttonClickHandler = (event) => {
     // console.log("event: ", event.currentTarget);
-
     switch (event.currentTarget.name) {
       case "trash":
-        this.deleteHandler(event);
+        // this.deleteHandler(event);
+        this.props.reduxDeleteItemHandler(event);
         // console.log("button click fwded to delete handler");
         break;
       case "edit":
-        this.editHandler(event);
+        this.props.reduxEditHandler(event);
         break;
-
       case "angle down":
-        this.setState((prevState) => ({
-          showListOptions: !prevState.showListOptions,
-        }));
+        this.props.reduxToggleMenu();
         break;
-
       case "none":
-        this.setState({
-          listColor: event.currentTarget.id,
-        });
-
+        this.props.reduxColorChange(event);
         break;
-
       default:
         console.log("no clue m8");
     }
-  };
-
-  mouseHover = (event) => {
-    const { id } = event.target; //object destructering
-    const itemId = Number(id); //converts id to number
-
-    this.setState((prevState) => {
-      const updatedState = prevState.listData.map((task) => {
-        if (task.id === itemId) {
-          return {
-            //returns new object so as not to edit state directly
-            ...task, // uses spread operator to bring in old tasks properties
-            showItemOptions: true,
-          };
-        }
-        return task;
-      });
-      return {
-        listData: updatedState,
-      };
-    });
-
-    // console.log(this.props.listData);
-  };
-
-  mouseExit = (event) => {
-    const { id } = event.target; //object destructering
-    const itemId = Number(id); //converts id to number
-
-    this.setState((prevState) => {
-      const updatedState = prevState.listData.map((task) => {
-        if (task.id === itemId) {
-          return {
-            //returns new object so as not to edit state directly
-            ...task, // uses spread operator to bring in old tasks properties
-            showItemOptions: false,
-          };
-        }
-        return task;
-      });
-      return {
-        listData: updatedState,
-      };
-    });
   };
 
   render() {
     const todoItems = this.props.listData.map((item) => (
       <ListItem
         key={item.id}
-        mouseHover={this.mouseHover}
-        mouseExit={this.mouseExit}
-        changed={this.props.reduxInputUpdate}
+        changed={this.props.reduxUpdateList}
         item={item}
         clicked={this.buttonClickHandler}
         submit={this.submitHandler}
@@ -262,12 +87,12 @@ class List extends Component {
             listId={this.props.listId}
           />
         ) : null}
-        <form name="newItemEntry" onSubmit={this.props.reduxSubmitHandler}>
+        <form name="newItemEntry" onSubmit={this.submitHandler}>
           <input
             className={`${classes[this.props.listColor]}`}
             name="newItem"
             value={this.props.newItem}
-            onChange={(event)=>this.props.reduxInputUpdate(event)}
+            onChange={(event) => this.props.reduxUpdateList(event)}
             placeholder="Add a task"
             type="text"
           />
@@ -296,8 +121,12 @@ Properties from within state (as seen in reducer.js) are assigned as props which
 //mapDispatchToProps defines which actions are being used in this container
 const mapDispatchToProps = (dispatch) => {
   return {
-reduxInputUpdate: (event)=>dispatch({type: actionTypes.UPDATE_LIST,  value: event} ),
-
+    reduxUpdateList: (event) =>      dispatch({ type: actionTypes.UPDATE_LIST, value: event }),
+    reduxCreateListItem: () => dispatch({ type: actionTypes.CREATE_LIST_ITEM }),
+    reduxEditHandler: (event) =>      dispatch({ type: actionTypes.EDIT_LIST_ITEM, value: event }),
+    reduxDeleteItemHandler: (event) =>      dispatch({ type: actionTypes.DELETE_LIST_ITEM, value: event }),
+    reduxToggleMenu: () => dispatch({ type: actionTypes.TOGGLE_MENU }),
+    reduxColorChange: (event) =>      dispatch({ type: actionTypes.CHANGE_COLOR, value: event }),
   };
 };
 
